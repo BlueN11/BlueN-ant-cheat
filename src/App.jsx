@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import FsLightbox from "fslightbox-react";
 import emailjs from "@emailjs/browser";
+import { FaHeadset } from "react-icons/fa";
 
 export default function App() {
   const [toggler, setToggler] = useState(false);
@@ -15,10 +16,10 @@ export default function App() {
     e.preventDefault();
     emailjs
       .sendForm(
-        "service_bwzlc5n",
-        "template_mwr06ko",
+        "service_bwzlc5n", // seu service ID
+        "template_mwr06ko", // seu template ID
         form.current,
-        "iHRyxdXXmlC4Ha4mH"
+        "iHRyxdXXmlC4Ha4mH" // sua public key
       )
       .then(
         () => {
@@ -31,8 +32,11 @@ export default function App() {
       );
   };
 
+  // Estado do tooltip do botão flutuante
+  const [hover, setHover] = useState(false);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-gray-100 relative">
       {/* Header */}
       <header className="max-w-6xl mx-auto p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -185,6 +189,48 @@ export default function App() {
           </a>
         </div>
       </section>
+
+      {/* Botão flutuante de suporte 24h */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center">
+        {hover && (
+          <div className="mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg shadow-lg animate-fadeIn">
+            Clique para suporte imediato!
+          </div>
+        )}
+
+        <a
+          href="https://discord.gg/mG22rmjqfG"
+          target="_blank"
+          rel="noopener noreferrer"
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          className="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg animate-pulse transition-all duration-300 hover:scale-105"
+          style={{
+            boxShadow: "0 0 15px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4)",
+          }}
+        >
+          <FaHeadset className="text-xl" />
+          <span className="font-semibold">Suporte 24h</span>
+        </a>
+
+        <style jsx>{`
+          @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(5px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out forwards;
+          }
+
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+          }
+          .animate-pulse {
+            animation: pulse 2s infinite;
+          }
+        `}</style>
+      </div>
     </div>
   );
 }
