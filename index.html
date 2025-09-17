@@ -8,80 +8,38 @@
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     /* Tooltip fade-in */
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(5px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+    @keyframes fadeIn {0%{opacity:0;transform:translateY(5px);}100%{opacity:1;transform:translateY(0);}}
+    .animate-fadeIn{animation:fadeIn 0.3s ease-out forwards;}
 
     /* Pulsar do botão */
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-    .animate-pulse { animation: pulse 2s infinite; }
+    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+    .animate-pulse{animation:pulse 2s infinite;}
 
     /* Botão de suporte glow */
-    .glow {
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4);
-    }
+    .glow{box-shadow:0 0 15px rgba(59,130,246,0.6),0 0 30px rgba(59,130,246,0.4);}
 
     /* Partículas do fundo */
-    canvas#particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
+    canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;}
 
     /* Termos em popup */
-    #termsModal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      z-index: 60;
-      overflow-y: auto;
-    }
-    #termsModalContent {
-      max-width: 800px;
-      margin: 5% auto;
-      background: #111827;
-      padding: 2rem;
-      border-radius: 1rem;
-      color: #e5e7eb;
-      line-height: 1.6;
-    }
-    #termsModalContent h2 { color: #3b82f6; font-size: 2rem; margin-bottom: 1rem; }
-    #termsModalContent h3 { color: #fbbf24; font-size: 1.2rem; margin-top: 1rem; margin-bottom: 0.5rem; }
-    #termsClose {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      font-size: 2rem;
-      color: #fff;
-      cursor: pointer;
-    }
+    #termsModal{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;z-index:60;overflow-y:auto;}
+    #termsModalContent{max-width:800px;margin:5% auto;background:#111827;padding:2rem;border-radius:1rem;color:#e5e7eb;line-height:1.6;}
+    #termsModalContent h2{color:#3b82f6;font-size:2rem;margin-bottom:1rem;}
+    #termsModalContent h3{color:#fbbf24;font-size:1.2rem;margin-top:1rem;margin-bottom:0.5rem;}
 
     /* Quadrado flutuante inferior esquerdo */
-    #safeBox {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 1.5rem;
-      z-index: 50;
-      background: #1f2937;
-      color: #10b981;
-      padding: 1rem 1.5rem;
-      border-radius: 0.5rem;
-      font-weight: bold;
-      box-shadow: 0 0 15px rgba(16,185,129,0.6);
-    }
+    #safeBox{position:fixed;bottom:1.5rem;left:1.5rem;z-index:50;background:#1f2937;color:#10b981;padding:1rem 1.5rem;border-radius:0.5rem;font-weight:bold;box-shadow:0 0 15px rgba(16,185,129,0.6);}
+
+    /* Tela de banimento */
+    #banScreen{position:fixed;inset:0;background:#1f2937;color:red;display:flex;align-items:center;justify-content:center;font-size:3rem;z-index:1000;text-align:center;flex-direction:column;}
   </style>
 </head>
 <body class="bg-gray-900 text-white relative overflow-x-hidden">
+
+  <!-- Tela de banimento -->
+  <div id="banScreen" style="display:none;">
+    🚫Você está banido!
+  </div>
 
   <!-- Partículas interativas -->
   <canvas id="particles"></canvas>
@@ -215,7 +173,6 @@
   <!-- TERMOS MODAL -->
   <div id="termsModal">
     <div id="termsModalContent">
-      <span id="termsClose" onclick="closeTerms()">&times;</span>
       <h2>Termos & Condições</h2>
 
       <h3>1.1 Termos de Produtos</h3>
@@ -250,102 +207,69 @@
       <p>Vendemos exclusivamente via paypal.</p>
       <p>Se o produto deixar de funcionar devido a alterações feitas pelo cliente, não forneceremos suporte para corrigir o erro. Nosso suporte se aplica apenas ao produto adquirido, garantindo seu funcionamento.</p>
       <p>Lembramos que, ao realizar qualquer compra, você concorda com os termos.</p>
+
+      <!-- Botões Aceitar/Recusar -->
+      <div class="mt-4 flex gap-4 justify-center">
+        <button onclick="aceitarTermos()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg font-semibold">Aceitar</button>
+        <button onclick="recusarTermos()" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-semibold">Recusar</button>
+      </div>
     </div>
   </div>
 
-  <!-- SCRIPT DE PARTÍCULAS INTERATIVAS -->
+  <!-- SCRIPT DE PARTÍCULAS E TERMOS -->
   <script>
+    // Partículas
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particlesArray = [];
     let mouse = { x: null, y: null };
-
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+    window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y; });
     window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); });
 
     const colors = ['#3B82F6','#8B5CF6','#10B981','#F59E0B','#EF4444'];
-
     class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.baseX = this.x;
-        this.baseY = this.y;
-        this.density = Math.random() * 30 + 1;
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-      }
-      draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-        ctx.closePath();
-        ctx.fill();
-      }
-      update() {
-        let dx = mouse.x - this.x;
-        let dy = mouse.y - this.y;
-        let distance = Math.sqrt(dx*dx + dy*dy);
-        let forceDirectionX = dx / distance;
-        let forceDirectionY = dy / distance;
-        let maxDistance = 100;
-        let force = (maxDistance - distance)/maxDistance;
-
-        if(distance < 100){
-          this.x -= forceDirectionX * force * this.density;
-          this.y -= forceDirectionY * force * this.density;
-        } else {
-          if(this.x !== this.baseX) { this.x -= (this.x - this.baseX)/10; }
-          if(this.y !== this.baseY) { this.y -= (this.y - this.baseY)/10; }
-        }
+      constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*3+1;this.baseX=this.x;this.baseY=this.y;this.density=Math.random()*30+1;this.color=colors[Math.floor(Math.random()*colors.length)];}
+      draw(){ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.closePath();ctx.fill();}
+      update(){
+        let dx=mouse.x-this.x,dy=mouse.y-this.y,distance=Math.sqrt(dx*dx+dy*dy),forceDirectionX=dx/distance,forceDirectionY=dy/distance,maxDistance=100,force=(maxDistance-distance)/maxDistance;
+        if(distance<100){this.x-=forceDirectionX*force*this.density;this.y-=forceDirectionY*force*this.density;}
+        else{if(this.x!==this.baseX){this.x-=(this.x-this.baseX)/10;}if(this.y!==this.baseY){this.y-=(this.y-this.baseY)/10;}}
       }
     }
-
-    function init() {
-      particlesArray = [];
-      for(let i=0; i<150; i++){
-        particlesArray.push(new Particle());
-      }
-    }
-
-    function connectParticles() {
-      for(let a=0; a<particlesArray.length; a++){
-        for(let b=a; b<particlesArray.length; b++){
-          let dx = particlesArray[a].x - particlesArray[b].x;
-          let dy = particlesArray[a].y - particlesArray[b].y;
-          let distance = Math.sqrt(dx*dx + dy*dy);
-          if(distance < 120){
-            ctx.strokeStyle = particlesArray[a].color;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-            ctx.stroke();
-            ctx.closePath();
-          }
-        }
-      }
-    }
-
-    function animate() {
-      ctx.clearRect(0,0,canvas.width, canvas.height);
-      for(let i=0;i<particlesArray.length;i++){
-        particlesArray[i].update();
-        particlesArray[i].draw();
-      }
-      connectParticles();
-      requestAnimationFrame(animate);
-    }
-
-    init();
-    animate();
+    function init(){particlesArray=[];for(let i=0;i<150;i++){particlesArray.push(new Particle());}}
+    function connectParticles(){for(let a=0;a<particlesArray.length;a++){for(let b=a;b<particlesArray.length;b++){let dx=particlesArray[a].x-particlesArray[b].x,dy=particlesArray[a].y-particlesArray[b].y,distance=Math.sqrt(dx*dx+dy*dy);if(distance<120){ctx.strokeStyle=particlesArray[a].color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(particlesArray[a].x,particlesArray[a].y);ctx.lineTo(particlesArray[b].x,particlesArray[b].y);ctx.stroke();ctx.closePath();}}}}
+    function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<particlesArray.length;i++){particlesArray[i].update();particlesArray[i].draw();}connectParticles();requestAnimationFrame(animate);}
+    init();animate();
 
     // Termos modal
-    function openTerms() { document.getElementById('termsModal').style.display='block'; }
-    function closeTerms() { document.getElementById('termsModal').style.display='none'; }
+    function openTerms(){document.getElementById('termsModal').style.display='block';}
+
+    function aceitarTermos(){
+      localStorage.setItem('termosAceitos','true');
+      document.getElementById('termsModal').style.display='none';
+    }
+
+    function recusarTermos(){
+      localStorage.setItem('banido','true');
+      checkBan();
+      document.getElementById('termsModal').style.display='none';
+    }
+
+    function checkBan(){
+      if(localStorage.getItem('banido')==='true'){
+        document.getElementById('banScreen').style.display='flex';
+      }
+    }
+
+    // Ao carregar a página
+    window.onload=function(){
+      if(localStorage.getItem('termosAceitos')!=='true' && localStorage.getItem('banido')!=='true'){
+        openTerms();
+      }
+      checkBan();
+    }
   </script>
 
 </body>
