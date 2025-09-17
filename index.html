@@ -44,11 +44,22 @@
   <!-- Partículas interativas -->
   <canvas id="particles"></canvas>
 
-  <!-- NAV / TERMOS -->
-  <nav class="fixed top-0 w-full flex justify-end p-6 z-40 gap-4">
-    <button onclick="openTerms()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-white">Termos</button>
-    <button onclick="scrollToSobre()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg font-semibold text-white">Sobre</button>
-  </nav>
+  <!-- BOTÕES FLUTUANTES NO TOPO -->
+  <div class="fixed top-6 right-6 z-50 flex flex-col items-end gap-4">
+    <!-- Sobre -->
+    <div class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg animate-pulse glow transition-all duration-300 hover:scale-105 cursor-pointer"
+         onclick="document.getElementById('sobre').scrollIntoView({behavior:'smooth'});">
+      <i class="fas fa-info-circle text-xl"></i>
+      <span class="font-semibold">Sobre</span>
+    </div>
+
+    <!-- Termos -->
+    <div class="flex items-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-full shadow-lg animate-pulse glow transition-all duration-300 hover:scale-105 cursor-pointer"
+         onclick="openTerms()">
+      <i class="fas fa-file-contract text-xl"></i>
+      <span class="font-semibold">Termos</span>
+    </div>
+  </div>
 
   <!-- HERO / BANNER -->
   <section class="relative bg-cover bg-center h-screen flex items-center justify-center overflow-hidden"
@@ -154,7 +165,7 @@
     <p class="text-gray-400">© 2025 BlueN Security • Todos os direitos reservados</p>
   </footer>
 
-  <!-- BOTÃO FLUTUANTE DE SUPORTE 24H -->
+  <!-- BOTÃO FLUTUANTE DE SUPORTE 24H (canto inferior direito) -->
   <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center">
     <div id="tooltip" class="mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg shadow-lg hidden animate-fadeIn">
       Clique para suporte imediato!
@@ -246,16 +257,29 @@
 
     // Termos modal
     function openTerms(){document.getElementById('termsModal').style.display='block';}
-    function aceitarTermos(){localStorage.setItem('termosAceitos','true');document.getElementById('termsModal').style.display='none';}
-    function recusarTermos(){localStorage.setItem('banido','true');checkBan();document.getElementById('termsModal').style.display='none';}
-    function checkBan(){if(localStorage.getItem('banido')==='true'){document.getElementById('banScreen').style.display='flex';}}
 
-    // Scroll para Sobre
-    function scrollToSobre(){document.getElementById('sobre').scrollIntoView({behavior:'smooth'});}
+    function aceitarTermos(){
+      localStorage.setItem('termosAceitos','true');
+      document.getElementById('termsModal').style.display='none';
+    }
+
+    function recusarTermos(){
+      localStorage.setItem('banido','true');
+      checkBan();
+      document.getElementById('termsModal').style.display='none';
+    }
+
+    function checkBan(){
+      if(localStorage.getItem('banido')==='true'){
+        document.getElementById('banScreen').style.display='flex';
+      }
+    }
 
     // Ao carregar a página
     window.onload=function(){
-      if(localStorage.getItem('termosAceitos')!=='true' && localStorage.getItem('banido')!=='true'){openTerms();}
+      if(localStorage.getItem('termosAceitos')!=='true' && localStorage.getItem('banido')!=='true'){
+        openTerms();
+      }
       checkBan();
     }
   </script>
