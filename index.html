@@ -20,11 +20,14 @@
     #termsClose{position:absolute;top:1rem;right:1rem;font-size:2rem;color:#fff;cursor:pointer;}
     #safeBox{position:fixed;bottom:1.5rem;left:1.5rem;z-index:50;background:#1f2937;color:#10b981;padding:1rem 1.5rem;border-radius:0.5rem;font-weight:bold;box-shadow:0 0 15px rgba(16,185,129,0.6);}
     nav.fixed.top-0{gap:4px;display:flex;justify-end;padding:1.5rem;width:100%;z-index:40;}
+    #banScreen{display:none;position:fixed;inset:0;background:#111827;color:#ef4444;font-size:3rem;font-weight:bold;display:flex;justify-content:center;align-items:center;z-index:999;}
   </style>
 </head>
 <body class="bg-gray-900 text-white relative overflow-x-hidden">
 
   <canvas id="particles"></canvas>
+
+  <div id="banScreen">🚫 Você está banido</div>
 
   <!-- NAV / TERMOS E SOBRE -->
   <nav class="fixed top-0 w-full flex justify-end gap-4 p-6 z-40">
@@ -43,9 +46,8 @@
         Proteção avançada, desempenho e confiança para o seu servidor.
       </p>
       <div class="mt-6 flex flex-col md:flex-row gap-4 justify-center animate-fadeIn">
-        <a href="#planos" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold">Ver Planos</a>
-        <a href="https://discord.gg/mG22rmjqfG" target="_blank"
-           class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold">Entrar no Discord</a>
+        <a href="#planos" class="buyBtn px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold">Ver Planos</a>
+        <a href="https://discord.gg/mG22rmjqfG" target="_blank" class="discordBtn px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold">Entrar no Discord</a>
       </div>
     </div>
   </section>
@@ -141,7 +143,7 @@
       Clique para suporte imediato!
     </div>
     <a href="https://discord.gg/mG22rmjqfG" target="_blank"
-       class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg animate-pulse glow transition-all duration-300 hover:scale-105 relative z-10"
+       class="discordBtn flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg animate-pulse glow transition-all duration-300 hover:scale-105 relative z-10"
        onmouseover="document.getElementById('tooltip').style.display='block';"
        onmouseout="document.getElementById('tooltip').style.display='none';">
       <i class="fas fa-headset text-xl"></i>
@@ -157,39 +159,14 @@
     <div id="termsModalContent">
       <span id="termsClose" onclick="closeTerms()">&times;</span>
       <h2>Termos & Condições</h2>
-
       <h3>1.1 Termos de Produtos</h3>
-      <p>Estes termos e condições regulam o uso de todos os produtos, serviços e conteúdos oferecidos pela BlueN, incluindo, mas não se limitando a, sistemas de tráfego, eventos, sites e softwares. Ao acessar ou utilizar nossos serviços, você concorda em cumprir estes termos. Se não concordar, não use nossos serviços.</p>
-
+      <p>Estes termos e condições regulam o uso de todos os produtos, serviços e conteúdos oferecidos pela BlueN...</p>
       <h3>Revisão dos Termos</h3>
       <p>Revisamos nossos termos regularmente. É sua responsabilidade verificar esta página periodicamente para quaisquer alterações.</p>
-
-      <h3>Direitos de Propriedade Intelectual</h3>
-      <p>Você não pode violar nossos direitos de propriedade intelectual ou os direitos de terceiros. Isso inclui copiar, modificar ou distribuir nosso conteúdo sem permissão.</p>
-
-      <h3>Formação de Contrato</h3>
-      <p>Estes termos formam um contrato legalmente vinculativo entre você e a BlueN. Ao usar nossos serviços, você concorda em cumpri-los.</p>
-
-      <h3>Produtos e Serviços</h3>
-      <p>Estes termos se aplicam a todos os nossos produtos e serviços, incluindo itens gratuitos e pagos. Ao comprar ou baixar nossos produtos/serviços, você reconhece ter lido e aceitado estes termos.</p>
-
-      <h3>Alterações nos Termos</h3>
-      <p>Podemos alterar estes termos a qualquer momento. Se fizermos alterações substanciais, notificaremos você por meio de nossos serviços.</p>
-
-      <h3>Rescisão</h3>
-      <p>Podemos rescindir estes termos a qualquer momento, com ou sem aviso prévio. Se fizermos isso, você não terá mais acesso aos nossos serviços.</p>
-
-      <h3>1.2 Termos de Produtos</h3>
-      <p>Não comercializamos códigos ou arquivos de nossos bots ou produtos.</p>
-      <p>Não oferecemos reembolso para produtos ou serviços entregues, uma vez que se trata de serviços digitais.</p>
-      <p>Todas as solicitações de suporte e informações devem ser encaminhadas por meio de tickets.</p>
-      <p>As transações e consultas devem ser efetuadas exclusivamente por meio de tickets e em nossos sistemas de pagamento.</p>
-      <p>Não assumimos responsabilidade por pagamentos realizados a terceiros.</p>
-      <p>A falta de respeito para com a equipe pode resultar na perda total do suporte ou produtos, podendo levar a banimentos.</p>
-      <p>Qualquer tentativa de violação da integridade dos produtos resultará automaticamente na perda total de suporte.</p>
-      <p>Vendemos exclusivamente via Cripto para compradores fora do Brasil.</p>
-      <p>Se o produto deixar de funcionar devido a alterações feitas pelo cliente, não forneceremos suporte para corrigir o erro. Nosso suporte se aplica apenas ao produto adquirido, garantindo seu funcionamento.</p>
-      <p>Lembramos que, ao realizar qualquer compra, você concorda com os termos.</p>
+      <div class="mt-6 flex justify-center gap-4">
+        <button id="acceptTerms" class="px-6 py-3 bg-green-500 hover:bg-green-600 rounded-lg font-semibold text-white">Aceitar</button>
+        <button id="declineTerms" class="px-6 py-3 bg-red-500 hover:bg-red-600 rounded-lg font-semibold text-white">Recusar</button>
+      </div>
     </div>
   </div>
 
@@ -208,12 +185,44 @@
     function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<particlesArray.length;i++){particlesArray[i].update();particlesArray[i].draw();}connectParticles();requestAnimationFrame(animate);}
     init(); animate();
 
-    // Termos modal
+    // Termos modal e ban
     function openTerms(){document.getElementById('termsModal').style.display='block';}
     function closeTerms(){document.getElementById('termsModal').style.display='none';}
+    function showBan(){document.getElementById('banScreen').style.display='flex'; document.body.style.overflow='hidden';}
 
-    // Scroll suave para Sobre
+    // Aceitar termos
+    document.getElementById('acceptTerms').addEventListener('click',function(){
+      localStorage.setItem('termosAceitos','true');
+      closeTerms();
+    });
+
+    // Recusar termos
+    document.getElementById('declineTerms').addEventListener('click',function(){
+      localStorage.setItem('banido','true');
+      showBan();
+    });
+
+    // Checagem ao carregar
+    window.onload = function(){
+      if(localStorage.getItem('banido')==='true'){showBan();}
+      else if(localStorage.getItem('termosAceitos')!=='true'){openTerms();}
+    }
+
+    // Scroll suave
     function scrollToSobre(){document.getElementById('sobre').scrollIntoView({behavior:'smooth'});}
+
+    // Bloqueio de ações críticas
+    function checarTermos(){
+      if(localStorage.getItem('banido')==='true'){showBan(); return false;}
+      if(localStorage.getItem('termosAceitos')==='true') return true;
+      alert('❌ Você não aceitou os termos!');
+      return false;
+    }
+
+    document.querySelectorAll('.buyBtn, .discordBtn').forEach(btn=>{
+      btn.addEventListener('click',function(e){if(!checarTermos()) e.preventDefault();});
+    });
+
   </script>
 
 </body>
