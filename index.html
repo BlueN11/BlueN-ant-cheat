@@ -14,25 +14,26 @@
     .glow{box-shadow:0 0 15px rgba(59,130,246,0.6),0 0 30px rgba(59,130,246,0.4);}
     canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;}
     #termsModal{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;z-index:60;overflow-y:auto;}
-    #termsModalContent{max-width:800px;margin:5% auto;background:#111827;padding:2rem;border-radius:1rem;color:#e5e7eb;line-height:1.6;}
+    #termsModalContent{max-width:800px;margin:5% auto;background:#111827;padding:2rem;border-radius:1rem;color:#e5e7eb;line-height:1.6;position:relative;}
     #termsModalContent h2{color:#3b82f6;font-size:2rem;margin-bottom:1rem;}
     #termsModalContent h3{color:#fbbf24;font-size:1.2rem;margin-top:1rem;margin-bottom:0.5rem;}
     #termsClose{position:absolute;top:1rem;right:1rem;font-size:2rem;color:#fff;cursor:pointer;}
     #safeBox{position:fixed;bottom:1.5rem;left:1.5rem;z-index:50;background:#1f2937;color:#10b981;padding:1rem 1.5rem;border-radius:0.5rem;font-weight:bold;box-shadow:0 0 15px rgba(16,185,129,0.6);}
     nav.fixed.top-0{gap:4px;display:flex;justify-end;padding:1.5rem;width:100%;z-index:40;}
-    #banScreen{display:none;position:fixed;inset:0;background:#111827;color:#ef4444;font-size:3rem;font-weight:bold;display:flex;justify-content:center;align-items:center;z-index:999;}
+    #banOverlay{position:fixed;inset:0;background:#111827;color:#ef4444;display:flex;justify-content:center;align-items:center;font-size:2rem;font-weight:bold;z-index:9999;display:none;}
   </style>
 </head>
 <body class="bg-gray-900 text-white relative overflow-x-hidden">
 
   <canvas id="particles"></canvas>
 
-  <div id="banScreen">🚫 Você está banido</div>
+  <!-- BANIDO -->
+  <div id="banOverlay">🚫 Você está banido!</div>
 
   <!-- NAV / TERMOS E SOBRE -->
   <nav class="fixed top-0 w-full flex justify-end gap-4 p-6 z-40">
-    <button onclick="openTerms()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-white">Termos</button>
-    <button onclick="scrollToSobre()" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold text-white">Sobre</button>
+    <button id="btnTermosNav" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-white">Termos</button>
+    <button id="btnSobreNav" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold text-white">Sobre</button>
   </nav>
 
   <!-- HERO / BANNER -->
@@ -46,8 +47,9 @@
         Proteção avançada, desempenho e confiança para o seu servidor.
       </p>
       <div class="mt-6 flex flex-col md:flex-row gap-4 justify-center animate-fadeIn">
-        <a href="#planos" class="buyBtn px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold">Ver Planos</a>
-        <a href="https://discord.gg/mG22rmjqfG" target="_blank" class="discordBtn px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold">Entrar no Discord</a>
+        <a href="#planos" id="btnPlanos" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold">Ver Planos</a>
+        <a href="https://discord.gg/mG22rmjqfG" target="_blank" id="btnDiscord"
+           class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold">Entrar no Discord</a>
       </div>
     </div>
   </section>
@@ -61,50 +63,6 @@
       Desenvolvido com tecnologia avançada, ele impede exploits, bloqueia scripts maliciosos
       e protege a integridade do servidor contra hackers.  
     </p>
-  </section>
-
-  <!-- CHANGELOG -->
-  <section id="changelog" class="py-20 px-6 bg-gray-800 text-center">
-    <h2 class="text-3xl font-bold text-blue-400">Changelog</h2>
-    <div class="mt-8 max-w-3xl mx-auto text-left space-y-6">
-      <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
-        <h3 class="font-bold text-xl text-green-400">Versão 4.5</h3>
-        <ul class="list-disc list-inside text-gray-300 mt-2">
-          <li>🔥 Nova proteção contra manipulação de funções.</li>
-          <li>🛡️ Melhorias no anti-executor Lua.</li>
-          <li>🚀 Performance otimizada em servidores lotados.</li>
-          <li>📈 Log suspeita no console do servidor.</li>
-        </ul>
-      </div>
-      <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
-        <h3 class="font-bold text-xl text-yellow-400">Versão 4.4</h3>
-        <ul class="list-disc list-inside text-gray-300 mt-2">
-          <li>⚡ Novo sistema de logs com integração ao Discord.</li>
-          <li>🧩 Verificação de integridade em tempo real.</li>
-          <li>🕵️‍♂️ Launcher anti-cheat, verificações de arquivos.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ESTATÍSTICAS -->
-  <section id="estatisticas" class="py-20 px-6 text-center">
-    <h2 class="text-3xl font-bold text-blue-400">Estatísticas</h2>
-    <p class="mt-4 text-gray-300">Resumo dos banimentos realizados recentemente:</p>
-    <div class="mt-10 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h3 class="text-xl font-bold text-blue-300">Lua Executor</h3>
-        <p class="text-3xl font-extrabold mt-2">+660</p>
-      </div>
-      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h3 class="text-xl font-bold text-blue-300">Fake Weapons</h3>
-        <p class="text-3xl font-extrabold mt-2">+1339</p>
-      </div>
-      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h3 class="text-xl font-bold text-blue-300">Air Break</h3>
-        <p class="text-3xl font-extrabold mt-2">+884</p>
-      </div>
-    </div>
   </section>
 
   <!-- PLANOS -->
@@ -133,39 +91,17 @@
     </div>
   </section>
 
-  <footer class="py-6 text-center bg-gray-900 border-t border-gray-700">
-    <p class="text-gray-400">© 2025 BlueN Security • Todos os direitos reservados</p>
-  </footer>
-
-  <!-- BOTÃO FLUTUANTE DE SUPORTE 24H -->
-  <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center">
-    <div id="tooltip" class="mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg shadow-lg hidden animate-fadeIn">
-      Clique para suporte imediato!
-    </div>
-    <a href="https://discord.gg/mG22rmjqfG" target="_blank"
-       class="discordBtn flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg animate-pulse glow transition-all duration-300 hover:scale-105 relative z-10"
-       onmouseover="document.getElementById('tooltip').style.display='block';"
-       onmouseout="document.getElementById('tooltip').style.display='none';">
-      <i class="fas fa-headset text-xl"></i>
-      <span class="font-semibold">🎧Suporte 24h</span>
-    </a>
-  </div>
-
-  <!-- QUADRADO FLUTUANTE INFERIOR ESQUERDO -->
-  <div id="safeBox">🛡️ Seguro</div>
-
   <!-- TERMOS MODAL -->
   <div id="termsModal">
     <div id="termsModalContent">
-      <span id="termsClose" onclick="closeTerms()">&times;</span>
+      <span id="termsClose">&times;</span>
       <h2>Termos & Condições</h2>
-      <h3>1.1 Termos de Produtos</h3>
-      <p>Estes termos e condições regulam o uso de todos os produtos, serviços e conteúdos oferecidos pela BlueN...</p>
-      <h3>Revisão dos Termos</h3>
-      <p>Revisamos nossos termos regularmente. É sua responsabilidade verificar esta página periodicamente para quaisquer alterações.</p>
-      <div class="mt-6 flex justify-center gap-4">
-        <button id="acceptTerms" class="px-6 py-3 bg-green-500 hover:bg-green-600 rounded-lg font-semibold text-white">Aceitar</button>
-        <button id="declineTerms" class="px-6 py-3 bg-red-500 hover:bg-red-600 rounded-lg font-semibold text-white">Recusar</button>
+      <p>Leia atentamente os termos antes de prosseguir. Ao aceitar, você concorda com todas as regras da BlueN.</p>
+
+      <!-- BOTÕES ACEITAR / RECUSAR -->
+      <div class="mt-6 flex gap-4 justify-center">
+        <button id="btnAceitar" class="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-semibold">✅ Aceitar</button>
+        <button id="btnRecusar" class="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold">❌ Recusar</button>
       </div>
     </div>
   </div>
@@ -181,48 +117,63 @@
     const colors=['#3B82F6','#8B5CF6','#10B981','#F59E0B','#EF4444'];
     class Particle{constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*3+1;this.baseX=this.x;this.baseY=this.y;this.density=Math.random()*30+1;this.color=colors[Math.floor(Math.random()*colors.length)];}draw(){ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.closePath();ctx.fill();}update(){let dx=mouse.x-this.x;let dy=mouse.y-this.y;let distance=Math.sqrt(dx*dx+dy*dy);let forceDirectionX=dx/distance;let forceDirectionY=dy/distance;let maxDistance=100;let force=(maxDistance-distance)/maxDistance;if(distance<100){this.x-=forceDirectionX*force*this.density;this.y-=forceDirectionY*force*this.density;}else{if(this.x!==this.baseX){this.x-=(this.x-this.baseX)/10;}if(this.y!==this.baseY){this.y-=(this.y-this.baseY)/10;}}}}
     function init(){particlesArray=[];for(let i=0;i<150;i++){particlesArray.push(new Particle());}}
-    function connectParticles(){for(let a=0;a<particlesArray.length;a++){for(let b=a;b<particlesArray.length;b++){let dx=particlesArray[a].x-particlesArray[b].x;let dy=particlesArray[a].y-particlesArray[b].y;let distance=Math.sqrt(dx*dx+dy*dy);if(distance<120){ctx.strokeStyle=particlesArray[a].color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(particlesArray[a].x,particlesArray[a].y);ctx.lineTo(particlesArray[b].x,particlesArray[b].y);ctx.stroke();ctx.closePath();}}}}
+    function connectParticles(){for(let a=0;a<particlesArray.length;a++){for(let b=a;b<particlesArray.length;b++){let dx=particlesArray[a].x-particlesArray[b].x;let dy=particlesArray[a].y-particlesArray[b].y;let distance=Math.sqrt(dx*dx+dy*dy);if(distance<120){ctx.strokeStyle=particlesArray[a].color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(particlesArray[a].x,particlesArray[a].y);ctx.lineTo(particles[b].x,particlesArray[b].y);ctx.stroke();ctx.closePath();}}}}
     function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<particlesArray.length;i++){particlesArray[i].update();particlesArray[i].draw();}connectParticles();requestAnimationFrame(animate);}
     init(); animate();
 
-    // Termos modal e ban
-    function openTerms(){document.getElementById('termsModal').style.display='block';}
-    function closeTerms(){document.getElementById('termsModal').style.display='none';}
-    function showBan(){document.getElementById('banScreen').style.display='flex'; document.body.style.overflow='hidden';}
+    // Modal e termos
+    const termsModal = document.getElementById('termsModal');
+    const termsClose = document.getElementById('termsClose');
+    const btnAceitar = document.getElementById('btnAceitar');
+    const btnRecusar = document.getElementById('btnRecusar');
+    const banOverlay = document.getElementById('banOverlay');
 
-    // Aceitar termos
-    document.getElementById('acceptTerms').addEventListener('click',function(){
+    function openTerms(){termsModal.style.display='block';}
+    function closeTerms(){termsModal.style.display='none';}
+
+    function showBan(){
+      banOverlay.style.display='flex';
+      document.body.innerHTML=''; // bloqueia todo conteúdo
+      document.body.appendChild(banOverlay);
+    }
+
+    // Botões Aceitar / Recusar
+    btnAceitar.onclick = function(){
       localStorage.setItem('termosAceitos','true');
       closeTerms();
-    });
-
-    // Recusar termos
-    document.getElementById('declineTerms').addEventListener('click',function(){
+    }
+    btnRecusar.onclick = function(){
       localStorage.setItem('banido','true');
       showBan();
-    });
+    }
 
-    // Checagem ao carregar
+    // Inicialização
     window.onload = function(){
-      if(localStorage.getItem('banido')==='true'){showBan();}
-      else if(localStorage.getItem('termosAceitos')!=='true'){openTerms();}
+      if(localStorage.getItem('banido') === 'true'){
+        showBan();
+      } else if(localStorage.getItem('termosAceitos') === 'true'){
+        // usuário já aceitou, nada a fazer
+      } else {
+        openTerms();
+      }
     }
 
     // Scroll suave
-    function scrollToSobre(){document.getElementById('sobre').scrollIntoView({behavior:'smooth'});}
+    document.getElementById('btnSobreNav').onclick = ()=>{document.getElementById('sobre').scrollIntoView({behavior:'smooth'});}
 
-    // Bloqueio de ações críticas
-    function checarTermos(){
-      if(localStorage.getItem('banido')==='true'){showBan(); return false;}
-      if(localStorage.getItem('termosAceitos')==='true') return true;
-      alert('❌ Você não aceitou os termos!');
-      return false;
+    // Bloqueio de ações sem termos aceitos
+    function checkTerms(e){
+      if(localStorage.getItem('termosAceitos')!=='true'){
+        e.preventDefault();
+        alert('❌ Você não aceitou os termos!');
+      }
     }
+    document.getElementById('btnPlanos').addEventListener('click',checkTerms);
+    document.getElementById('btnDiscord').addEventListener('click',checkTerms);
 
-    document.querySelectorAll('.buyBtn, .discordBtn').forEach(btn=>{
-      btn.addEventListener('click',function(e){if(!checarTermos()) e.preventDefault();});
-    });
-
+    // Botão Termos nav
+    document.getElementById('btnTermosNav').onclick = openTerms;
+    termsClose.onclick = closeTerms;
   </script>
 
 </body>
