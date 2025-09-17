@@ -14,25 +14,26 @@
     .glow{box-shadow:0 0 15px rgba(59,130,246,0.6),0 0 30px rgba(59,130,246,0.4);}
     canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;}
     #termsModal{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;z-index:60;overflow-y:auto;}
-    #termsModalContent{max-width:800px;margin:5% auto;background:#111827;padding:2rem;border-radius:1rem;color:#e5e7eb;line-height:1.6;position:relative;}
+    #termsModalContent{max-width:800px;margin:5% auto;background:#111827;padding:2rem;border-radius:1rem;color:#e5e7eb;line-height:1.6;}
     #termsModalContent h2{color:#3b82f6;font-size:2rem;margin-bottom:1rem;}
     #termsModalContent h3{color:#fbbf24;font-size:1.2rem;margin-top:1rem;margin-bottom:0.5rem;}
     #termsClose{position:absolute;top:1rem;right:1rem;font-size:2rem;color:#fff;cursor:pointer;}
     #safeBox{position:fixed;bottom:1.5rem;left:1.5rem;z-index:50;background:#1f2937;color:#10b981;padding:1rem 1.5rem;border-radius:0.5rem;font-weight:bold;box-shadow:0 0 15px rgba(16,185,129,0.6);}
     nav.fixed.top-0{gap:4px;display:flex;justify-end;padding:1.5rem;width:100%;z-index:40;}
-    #banScreen{position:fixed;inset:0;background:#111827;color:red;font-size:2rem;display:flex;align-items:center;justify-content:center;z-index:100;flex-direction:column;text-align:center;display:none;}
-    #termsButtons{margin-top:1rem;display:flex;justify-content:center;gap:1rem;}
-    .termsBtn{padding:0.5rem 1rem;border-radius:0.5rem;font-weight:bold;cursor:pointer;}
-    .accept{background-color:#10b981;color:#fff;}
-    .decline{background-color:#ef4444;color:#fff;}
+    /* Botão de desbanimento temporário */
+    #tempUnbanBtn{position:fixed;top:10px;left:10px;z-index:1000;}
   </style>
 </head>
 <body class="bg-gray-900 text-white relative overflow-x-hidden">
 
-  <canvas id="particles"></canvas>
+  <!-- BOTÃO DE DESBANIMENTO TEMPORÁRIO -->
+  <div id="tempUnbanBtn">
+    <button onclick="unbanTemporario()" style="padding:10px 20px;background:red;color:white;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">
+      DESBANIR TEMPORÁRIO
+    </button>
+  </div>
 
-  <!-- BANIDO -->
-  <div id="banScreen">🚫 Você está banido!</div>
+  <canvas id="particles"></canvas>
 
   <!-- NAV / TERMOS E SOBRE -->
   <nav class="fixed top-0 w-full flex justify-end gap-4 p-6 z-40">
@@ -51,8 +52,8 @@
         Proteção avançada, desempenho e confiança para o seu servidor.
       </p>
       <div class="mt-6 flex flex-col md:flex-row gap-4 justify-center animate-fadeIn">
-        <a href="#planos" id="btnPlanos" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold">Ver Planos</a>
-        <a href="https://discord.gg/mG22rmjqfG" id="btnDiscord" target="_blank"
+        <a href="#planos" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold">Ver Planos</a>
+        <a href="https://discord.gg/mG22rmjqfG" target="_blank"
            class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold">Entrar no Discord</a>
       </div>
     </div>
@@ -148,7 +149,7 @@
     <div id="tooltip" class="mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg shadow-lg hidden animate-fadeIn">
       Clique para suporte imediato!
     </div>
-    <a href="https://discord.gg/mG22rmjqfG" target="_blank" id="btnDiscord"
+    <a href="https://discord.gg/mG22rmjqfG" target="_blank"
        class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg animate-pulse glow transition-all duration-300 hover:scale-105 relative z-10"
        onmouseover="document.getElementById('tooltip').style.display='block';"
        onmouseout="document.getElementById('tooltip').style.display='none';">
@@ -163,32 +164,16 @@
   <!-- TERMOS MODAL -->
   <div id="termsModal">
     <div id="termsModalContent">
-      <span id="termsClose">&times;</span>
+      <span id="termsClose" onclick="closeTerms()">&times;</span>
       <h2>Termos & Condições</h2>
+
       <h3>1.1 Termos de Produtos</h3>
-      <p>Estes termos e condições regulam o uso de todos os produtos, serviços e conteúdos oferecidos pela BlueN, incluindo, mas não se limitando a, sistemas de tráfego, eventos, sites e softwares. Ao acessar ou utilizar nossos serviços, você concorda em cumprir estes termos. Se não concordar, não use nossos serviços.</p>
+      <p>Estes termos e condições regulam o uso de todos os produtos, serviços e conteúdos oferecidos pela BlueN...</p>
 
-      <h3>Revisão dos Termos</h3>
-      <p>Revisamos nossos termos regularmente. É sua responsabilidade verificar esta página periodicamente para quaisquer alterações.</p>
-
-      <h3>Direitos de Propriedade Intelectual</h3>
-      <p>Você não pode violar nossos direitos de propriedade intelectual ou os direitos de terceiros. Isso inclui copiar, modificar ou distribuir nosso conteúdo sem permissão.</p>
-
-      <h3>Formação de Contrato</h3>
-      <p>Estes termos formam um contrato legalmente vinculativo entre você e a BlueN. Ao usar nossos serviços, você concorda em cumpri-los.</p>
-
-      <h3>Produtos e Serviços</h3>
-      <p>Estes termos se aplicam a todos os nossos produtos e serviços, incluindo itens gratuitos e pagos. Ao comprar ou baixar nossos produtos/serviços, você reconhece ter lido e aceitado estes termos.</p>
-
-      <h3>Alterações nos Termos</h3>
-      <p>Podemos alterar estes termos a qualquer momento. Se fizermos alterações substanciais, notificaremos você por meio de nossos serviços.</p>
-
-      <h3>Rescisão</h3>
-      <p>Podemos rescindir estes termos a qualquer momento, com ou sem aviso prévio. Se fizermos isso, você não terá mais acesso aos nossos serviços.</p>
-
-      <div id="termsButtons">
-        <button class="termsBtn accept" id="btnAceitar">Aceitar Termos</button>
-        <button class="termsBtn decline" id="btnRecusar">Recusar Termos</button>
+      <!-- Botões de aceitar e recusar -->
+      <div class="mt-4 flex gap-4 justify-center">
+        <button onclick="aceitarTermos()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg font-semibold">Aceitar</button>
+        <button onclick="recusarTermos()" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-semibold">Recusar</button>
       </div>
     </div>
   </div>
@@ -208,68 +193,56 @@
     function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<particlesArray.length;i++){particlesArray[i].update();particlesArray[i].draw();}connectParticles();requestAnimationFrame(animate);}
     init(); animate();
 
-    // Cookies
-    function setCookie(cname, cvalue, exdays){
-      const d = new Date();
-      d.setTime(d.getTime() + (exdays*24*60*60*1000));
-      let expires = "expires="+ d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-    function getCookie(cname){
-      let name = cname + "=";
-      let decodedCookie = decodeURIComponent(document.cookie);
-      let ca = decodedCookie.split(';');
-      for(let i = 0; i < ca.length; i++){
-        let c = ca[i].trim();
-        if(c.indexOf(name) == 0) return c.substring(name.length,c.length);
-      }
-      return "";
+    // Variáveis de status
+    let isBanned = localStorage.getItem('banned') === 'true';
+    let acceptedTerms = localStorage.getItem('termsAccepted') === 'true';
+
+    // Função desban temporário
+    function unbanTemporario() {
+      localStorage.removeItem('banned');
+      localStorage.removeItem('termsAccepted');
+      alert('✅ Banimento removido temporariamente! Recarregue a página.');
+      document.getElementById('tempUnbanBtn').style.display = 'none';
     }
 
-    const termsModal = document.getElementById('termsModal');
-    const btnAceitar = document.getElementById('btnAceitar');
-    const btnRecusar = document.getElementById('btnRecusar');
-    const termsClose = document.getElementById('termsClose');
-    const banScreen = document.getElementById('banScreen');
+    // Bloqueio de acesso se banido
+    if (isBanned) {
+      document.body.innerHTML = '<h1 style="text-align:center;margin-top:20%;font-size:3rem;color:red;">🚫Você está banido!</h1>';
+    }
 
-    function openTerms(){termsModal.style.display='block';}
-    function closeTerms(){termsModal.style.display='none';}
+    function openTerms(){document.getElementById('termsModal').style.display='block';}
+    function closeTerms(){document.getElementById('termsModal').style.display='none';}
+    function scrollToSobre(){document.getElementById('sobre').scrollIntoView({behavior:'smooth'});}
 
-    function showBan(){termsModal.style.display='none';banScreen.style.display='flex';}
-
-    btnAceitar.onclick = function(){
-      setCookie('termosAceitos','true',3650);
+    // Aceitar ou recusar termos
+    function aceitarTermos() {
+      localStorage.setItem('termsAccepted','true');
+      acceptedTerms = true;
       closeTerms();
+      alert('✅ Termos aceitos! Agora você pode acessar o site.');
     }
 
-    btnRecusar.onclick = function(){
-      setCookie('banido','true',3650);
-      showBan();
+    function recusarTermos() {
+      localStorage.setItem('banned','true');
+      isBanned = true;
+      closeTerms();
+      document.body.innerHTML = '<h1 style="text-align:center;margin-top:20%;font-size:3rem;color:red;">🚫Você está banido!</h1>';
     }
 
-    termsClose.onclick = closeTerms;
-
-    function checkTermos(){
-      if(getCookie('banido') === 'true'){showBan();}
-      else if(getCookie('termosAceitos') !== 'true'){openTerms();}
+    // Função para verificar acesso antes de comprar ou acessar Discord
+    function verificarAcesso(func) {
+      if (!acceptedTerms) { alert('❌Você não aceitou os termos!'); return false; }
+      if (isBanned) { alert('🚫Você está banido!'); return false; }
+      func();
     }
 
-    window.onload = checkTermos;
-
-    // Bloquear links se não aceitou
-    ['btnPlanos','btnDiscord'].forEach(id=>{
-      const el = document.getElementById(id);
-      el.addEventListener('click', e=>{
-        if(getCookie('termosAceitos') !== 'true'){
-          e.preventDefault();
-          alert('❌ Você não aceitou os termos!');
-          openTerms();
-        }
+    // Bloqueia links de planos e Discord se não aceitou termos
+    document.querySelectorAll('a[href*="#planos"], a[href*="discord"]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        verificarAcesso(() => window.open(this.href, '_blank'));
       });
     });
-
-    // Scroll suave para Sobre
-    function scrollToSobre(){document.getElementById('sobre').scrollIntoView({behavior:'smooth'});}
   </script>
 
 </body>
