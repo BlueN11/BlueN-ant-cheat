@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BlueN Anti-Cheat</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     /* Tooltip fade-in */
     @keyframes fadeIn {
@@ -35,12 +36,60 @@
       z-index: -1;
       pointer-events: none;
     }
+
+    /* Termos em popup */
+    #termsModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      z-index: 60;
+      overflow-y: auto;
+    }
+    #termsModalContent {
+      max-width: 800px;
+      margin: 5% auto;
+      background: #111827;
+      padding: 2rem;
+      border-radius: 1rem;
+      color: #e5e7eb;
+      line-height: 1.6;
+    }
+    #termsModalContent h2 { color: #3b82f6; font-size: 2rem; margin-bottom: 1rem; }
+    #termsModalContent h3 { color: #fbbf24; font-size: 1.2rem; margin-top: 1rem; margin-bottom: 0.5rem; }
+    #termsClose {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* Quadrado flutuante inferior esquerdo */
+    #safeBox {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      z-index: 50;
+      background: #1f2937;
+      color: #10b981;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(16,185,129,0.6);
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-white relative overflow-x-hidden">
 
   <!-- Partículas interativas -->
   <canvas id="particles"></canvas>
+
+  <!-- NAV / TERMOS -->
+  <nav class="fixed top-0 w-full flex justify-end p-6 z-40">
+    <button onclick="openTerms()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-white">Termos</button>
+  </nav>
 
   <!-- HERO / BANNER -->
   <section class="relative bg-cover bg-center h-screen flex items-center justify-center overflow-hidden"
@@ -146,7 +195,7 @@
     <p class="text-gray-400">© 2025 BlueN Security • Todos os direitos reservados</p>
   </footer>
 
-  <!-- BOTÃO FLUTUANTE DE SUPORTE 24H COM SVG HEADSET -->
+  <!-- BOTÃO FLUTUANTE DE SUPORTE 24H -->
   <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center">
     <div id="tooltip" class="mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg shadow-lg hidden animate-fadeIn">
       Clique para suporte imediato!
@@ -155,15 +204,56 @@
        class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg animate-pulse glow transition-all duration-300 hover:scale-105 relative z-10"
        onmouseover="document.getElementById('tooltip').style.display='block';"
        onmouseout="document.getElementById('tooltip').style.display='none';">
-      <!-- Ícone SVG de headset -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 1a9 9 0 00-9 9v5a4 4 0 004 4h1a1 1 0 001-1v-4a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 001 1h1a4 4 0 004-4v-5a9 9 0 00-9-9z"/>
-      </svg>
+      <i class="fas fa-headset text-xl"></i>
       <span class="font-semibold">Suporte 24h</span>
     </a>
   </div>
 
-  <!-- SCRIPT DE PARTÍCULAS INTERATIVAS COM LINHAS -->
+  <!-- QUADRADO FLUTUANTE INFERIOR ESQUERDO -->
+  <div id="safeBox">🛡️ Seguro somente</div>
+
+  <!-- TERMOS MODAL -->
+  <div id="termsModal">
+    <div id="termsModalContent">
+      <span id="termsClose" onclick="closeTerms()">&times;</span>
+      <h2>Termos & Condições</h2>
+
+      <h3>1.1 Termos de Produtos</h3>
+      <p>Estes termos e condições regulam o uso de todos os produtos, serviços e conteúdos oferecidos pela BlueN, incluindo, mas não se limitando a, sistemas, eventos, sites e softwares. Ao acessar ou utilizar nossos serviços, você concorda em cumprir estes termos. Se não concordar, não use nossos serviços.</p>
+
+      <h3>Revisão dos Termos</h3>
+      <p>Revisamos nossos termos regularmente. É sua responsabilidade verificar esta página periodicamente para quaisquer alterações.</p>
+
+      <h3>Direitos de Propriedade Intelectual</h3>
+      <p>Você não pode violar nossos direitos de propriedade intelectual ou os direitos de terceiros. Isso inclui copiar, modificar ou distribuir nosso conteúdo sem permissão.</p>
+
+      <h3>Formação de Contrato</h3>
+      <p>Estes termos formam um contrato legalmente vinculativo entre você e a BlueN. Ao usar nossos serviços, você concorda em cumpri-los.</p>
+
+      <h3>Produtos e Serviços</h3>
+      <p>Estes termos se aplicam a todos os nossos produtos e serviços, incluindo itens gratuitos e pagos. Ao comprar ou baixar nossos produtos/serviços, você reconhece ter lido e aceitado estes termos.</p>
+
+      <h3>Alterações nos Termos</h3>
+      <p>Podemos alterar estes termos a qualquer momento. Se fizermos alterações substanciais, notificaremos você por meio de nossos serviços.</p>
+
+      <h3>Rescisão</h3>
+      <p>Podemos rescindir estes termos a qualquer momento, com ou sem aviso prévio. Se fizermos isso, você não terá mais acesso aos nossos serviços.</p>
+
+      <h3>1.2 Termos de Produtos</h3>
+      <p>Não comercializamos códigos ou arquivos de nossos bots ou produtos.</p>
+      <p>Não oferecemos reembolso para produtos ou serviços entregues, uma vez que se trata de serviços digitais.</p>
+      <p>Todas as solicitações de suporte e informações devem ser encaminhadas por meio de tickets.</p>
+      <p>As transações e consultas devem ser efetuadas exclusivamente por meio de tickets e em nossos sistemas de pagamento.</p>
+      <p>Não assumimos responsabilidade por pagamentos realizados a terceiros.</p>
+      <p>A falta de respeito para com a equipe pode resultar na perda total do suporte ou produtos, podendo levar a banimentos.</p>
+      <p>Qualquer tentativa de violação da integridade dos produtos resultará automaticamente na perda total de suporte.</p>
+      <p>Vendemos exclusivamente via Cripto para compradores fora do Brasil.</p>
+      <p>Se o produto deixar de funcionar devido a alterações feitas pelo cliente, não forneceremos suporte para corrigir o erro. Nosso suporte se aplica apenas ao produto adquirido, garantindo seu funcionamento.</p>
+      <p>Lembramos que, ao realizar qualquer compra, você concorda com os termos.</p>
+    </div>
+  </div>
+
+  <!-- SCRIPT DE PARTÍCULAS INTERATIVAS -->
   <script>
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
@@ -176,6 +266,8 @@
     window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
     window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); });
 
+    const colors = ['#3B82F6','#8B5CF6','#10B981','#F59E0B','#EF4444'];
+
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
@@ -184,9 +276,10 @@
         this.baseX = this.x;
         this.baseY = this.y;
         this.density = Math.random() * 30 + 1;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
       }
       draw() {
-        ctx.fillStyle = 'rgba(59,130,246,0.7)';
+        ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
         ctx.closePath();
@@ -225,7 +318,7 @@
           let dy = particlesArray[a].y - particlesArray[b].y;
           let distance = Math.sqrt(dx*dx + dy*dy);
           if(distance < 120){
-            ctx.strokeStyle = 'rgba(59,130,246,' + (1 - distance/120) + ')';
+            ctx.strokeStyle = particlesArray[a].color;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
@@ -249,6 +342,10 @@
 
     init();
     animate();
+
+    // Termos modal
+    function openTerms() { document.getElementById('termsModal').style.display='block'; }
+    function closeTerms() { document.getElementById('termsModal').style.display='none'; }
   </script>
 
 </body>
