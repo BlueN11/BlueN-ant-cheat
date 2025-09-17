@@ -83,7 +83,6 @@
           <li>🛡️ Melhorias no anti-executor Lua.</li>
           <li>🚀 Performance otimizada em servidores lotados.</li>
           <li>📈 Log suspeita no console do servidor.</li>
-          <li>🕵️‍♂️ Launcher anti-cheat, verificações de arquivos.</li>
         </ul>
       </div>
       <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
@@ -148,7 +147,7 @@
     <p class="text-gray-400">© 2025 BlueN Security • Todos os direitos reservados</p>
   </footer>
 
-  <!-- BOTÃO FLUTUANTE DE SUPORTE 24H -->
+  <!-- BOTÃO FLUTUANTE DE SUPORTE 24H COM HEADSET -->
   <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center">
     <div id="tooltip" class="mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg shadow-lg hidden animate-fadeIn">
       Clique para suporte imediato!
@@ -162,18 +161,27 @@
     </a>
   </div>
 
-  <!-- SCRIPT DE PARTÍCULAS INTERATIVAS COM LINHAS -->
+  <!-- SCRIPT DE PARTÍCULAS INTERATIVAS COM LINHAS E MUDANÇA DE COR POR SEÇÃO -->
   <script>
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particlesArray = [];
     let mouse = { x: null, y: null };
+    let color = '59,130,246'; // azul padrão
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
     window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); });
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      if(scrollY < window.innerHeight) color = '59,130,246'; // Hero
+      else if(scrollY < window.innerHeight*2) color = '34,197,94'; // Sobre
+      else if(scrollY < window.innerHeight*3) color = '234,179,8'; // Changelog
+      else if(scrollY < window.innerHeight*4) color = '236,72,153'; // Estatísticas
+      else color = '14,165,233'; // Planos
+    });
 
     class Particle {
       constructor() {
@@ -185,7 +193,7 @@
         this.density = Math.random() * 30 + 1;
       }
       draw() {
-        ctx.fillStyle = 'rgba(59,130,246,0.7)';
+        ctx.fillStyle = `rgba(${color},0.7)`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
         ctx.closePath();
@@ -204,8 +212,8 @@
           this.x -= forceDirectionX * force * this.density;
           this.y -= forceDirectionY * force * this.density;
         } else {
-          if(this.x !== this.baseX) { this.x -= (this.x - this.baseX)/10; }
-          if(this.y !== this.baseY) { this.y -= (this.y - this.baseY)/10; }
+          if(this.x !== this.baseX) this.x -= (this.x - this.baseX)/10;
+          if(this.y !== this.baseY) this.y -= (this.y - this.baseY)/10;
         }
       }
     }
@@ -224,7 +232,7 @@
           let dy = particlesArray[a].y - particlesArray[b].y;
           let distance = Math.sqrt(dx*dx + dy*dy);
           if(distance < 120){
-            ctx.strokeStyle = 'rgba(59,130,246,' + (1 - distance/120) + ')';
+            ctx.strokeStyle = `rgba(${color},${1 - distance/120})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
