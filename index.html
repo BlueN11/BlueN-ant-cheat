@@ -20,7 +20,11 @@
     #termsClose{position:absolute;top:1rem;right:1rem;font-size:2rem;color:#fff;cursor:pointer;}
     #safeBox{position:fixed;bottom:1.5rem;left:1.5rem;z-index:50;background:#1f2937;color:#10b981;padding:1rem 1.5rem;border-radius:0.5rem;font-weight:bold;box-shadow:0 0 15px rgba(16,185,129,0.6);}
     nav.fixed.top-0{gap:4px;display:flex;justify-end;padding:1.5rem;width:100%;z-index:40;}
-    #banOverlay{position:fixed;inset:0;background:#111827;color:#ef4444;display:flex;justify-content:center;align-items:center;font-size:2rem;font-weight:bold;z-index:9999;display:none;}
+    #banScreen{position:fixed;inset:0;background:#111827;color:red;font-size:2rem;display:flex;align-items:center;justify-content:center;z-index:100;flex-direction:column;text-align:center;display:none;}
+    #termsButtons{margin-top:1rem;display:flex;justify-content:center;gap:1rem;}
+    .termsBtn{padding:0.5rem 1rem;border-radius:0.5rem;font-weight:bold;cursor:pointer;}
+    .accept{background-color:#10b981;color:#fff;}
+    .decline{background-color:#ef4444;color:#fff;}
   </style>
 </head>
 <body class="bg-gray-900 text-white relative overflow-x-hidden">
@@ -28,12 +32,12 @@
   <canvas id="particles"></canvas>
 
   <!-- BANIDO -->
-  <div id="banOverlay">🚫 Você está banido!</div>
+  <div id="banScreen">🚫 Você está banido!</div>
 
   <!-- NAV / TERMOS E SOBRE -->
   <nav class="fixed top-0 w-full flex justify-end gap-4 p-6 z-40">
-    <button id="btnTermosNav" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-white">Termos</button>
-    <button id="btnSobreNav" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold text-white">Sobre</button>
+    <button onclick="openTerms()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-white">Termos</button>
+    <button onclick="scrollToSobre()" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold text-white">Sobre</button>
   </nav>
 
   <!-- HERO / BANNER -->
@@ -48,7 +52,7 @@
       </p>
       <div class="mt-6 flex flex-col md:flex-row gap-4 justify-center animate-fadeIn">
         <a href="#planos" id="btnPlanos" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold">Ver Planos</a>
-        <a href="https://discord.gg/mG22rmjqfG" target="_blank" id="btnDiscord"
+        <a href="https://discord.gg/mG22rmjqfG" id="btnDiscord" target="_blank"
            class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold">Entrar no Discord</a>
       </div>
     </div>
@@ -63,6 +67,50 @@
       Desenvolvido com tecnologia avançada, ele impede exploits, bloqueia scripts maliciosos
       e protege a integridade do servidor contra hackers.  
     </p>
+  </section>
+
+  <!-- CHANGELOG -->
+  <section id="changelog" class="py-20 px-6 bg-gray-800 text-center">
+    <h2 class="text-3xl font-bold text-blue-400">Changelog</h2>
+    <div class="mt-8 max-w-3xl mx-auto text-left space-y-6">
+      <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
+        <h3 class="font-bold text-xl text-green-400">Versão 4.5</h3>
+        <ul class="list-disc list-inside text-gray-300 mt-2">
+          <li>🔥 Nova proteção contra manipulação de funções.</li>
+          <li>🛡️ Melhorias no anti-executor Lua.</li>
+          <li>🚀 Performance otimizada em servidores lotados.</li>
+          <li>📈 Log suspeita no console do servidor.</li>
+        </ul>
+      </div>
+      <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
+        <h3 class="font-bold text-xl text-yellow-400">Versão 4.4</h3>
+        <ul class="list-disc list-inside text-gray-300 mt-2">
+          <li>⚡ Novo sistema de logs com integração ao Discord.</li>
+          <li>🧩 Verificação de integridade em tempo real.</li>
+          <li>🕵️‍♂️ Launcher anti-cheat, verificações de arquivos.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTATÍSTICAS -->
+  <section id="estatisticas" class="py-20 px-6 text-center">
+    <h2 class="text-3xl font-bold text-blue-400">Estatísticas</h2>
+    <p class="mt-4 text-gray-300">Resumo dos banimentos realizados recentemente:</p>
+    <div class="mt-10 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-blue-300">Lua Executor</h3>
+        <p class="text-3xl font-extrabold mt-2">+660</p>
+      </div>
+      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-blue-300">Fake Weapons</h3>
+        <p class="text-3xl font-extrabold mt-2">+1339</p>
+      </div>
+      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-blue-300">Air Break</h3>
+        <p class="text-3xl font-extrabold mt-2">+884</p>
+      </div>
+    </div>
   </section>
 
   <!-- PLANOS -->
@@ -91,17 +139,56 @@
     </div>
   </section>
 
+  <footer class="py-6 text-center bg-gray-900 border-t border-gray-700">
+    <p class="text-gray-400">© 2025 BlueN Security • Todos os direitos reservados</p>
+  </footer>
+
+  <!-- BOTÃO FLUTUANTE DE SUPORTE 24H -->
+  <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center">
+    <div id="tooltip" class="mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg shadow-lg hidden animate-fadeIn">
+      Clique para suporte imediato!
+    </div>
+    <a href="https://discord.gg/mG22rmjqfG" target="_blank" id="btnDiscord"
+       class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg animate-pulse glow transition-all duration-300 hover:scale-105 relative z-10"
+       onmouseover="document.getElementById('tooltip').style.display='block';"
+       onmouseout="document.getElementById('tooltip').style.display='none';">
+      <i class="fas fa-headset text-xl"></i>
+      <span class="font-semibold">🎧Suporte 24h</span>
+    </a>
+  </div>
+
+  <!-- QUADRADO FLUTUANTE INFERIOR ESQUERDO -->
+  <div id="safeBox">🛡️ Seguro</div>
+
   <!-- TERMOS MODAL -->
   <div id="termsModal">
     <div id="termsModalContent">
       <span id="termsClose">&times;</span>
       <h2>Termos & Condições</h2>
-      <p>Leia atentamente os termos antes de prosseguir. Ao aceitar, você concorda com todas as regras da BlueN.</p>
+      <h3>1.1 Termos de Produtos</h3>
+      <p>Estes termos e condições regulam o uso de todos os produtos, serviços e conteúdos oferecidos pela BlueN, incluindo, mas não se limitando a, sistemas de tráfego, eventos, sites e softwares. Ao acessar ou utilizar nossos serviços, você concorda em cumprir estes termos. Se não concordar, não use nossos serviços.</p>
 
-      <!-- BOTÕES ACEITAR / RECUSAR -->
-      <div class="mt-6 flex gap-4 justify-center">
-        <button id="btnAceitar" class="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-semibold">✅ Aceitar</button>
-        <button id="btnRecusar" class="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold">❌ Recusar</button>
+      <h3>Revisão dos Termos</h3>
+      <p>Revisamos nossos termos regularmente. É sua responsabilidade verificar esta página periodicamente para quaisquer alterações.</p>
+
+      <h3>Direitos de Propriedade Intelectual</h3>
+      <p>Você não pode violar nossos direitos de propriedade intelectual ou os direitos de terceiros. Isso inclui copiar, modificar ou distribuir nosso conteúdo sem permissão.</p>
+
+      <h3>Formação de Contrato</h3>
+      <p>Estes termos formam um contrato legalmente vinculativo entre você e a BlueN. Ao usar nossos serviços, você concorda em cumpri-los.</p>
+
+      <h3>Produtos e Serviços</h3>
+      <p>Estes termos se aplicam a todos os nossos produtos e serviços, incluindo itens gratuitos e pagos. Ao comprar ou baixar nossos produtos/serviços, você reconhece ter lido e aceitado estes termos.</p>
+
+      <h3>Alterações nos Termos</h3>
+      <p>Podemos alterar estes termos a qualquer momento. Se fizermos alterações substanciais, notificaremos você por meio de nossos serviços.</p>
+
+      <h3>Rescisão</h3>
+      <p>Podemos rescindir estes termos a qualquer momento, com ou sem aviso prévio. Se fizermos isso, você não terá mais acesso aos nossos serviços.</p>
+
+      <div id="termsButtons">
+        <button class="termsBtn accept" id="btnAceitar">Aceitar Termos</button>
+        <button class="termsBtn decline" id="btnRecusar">Recusar Termos</button>
       </div>
     </div>
   </div>
@@ -117,63 +204,72 @@
     const colors=['#3B82F6','#8B5CF6','#10B981','#F59E0B','#EF4444'];
     class Particle{constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*3+1;this.baseX=this.x;this.baseY=this.y;this.density=Math.random()*30+1;this.color=colors[Math.floor(Math.random()*colors.length)];}draw(){ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.closePath();ctx.fill();}update(){let dx=mouse.x-this.x;let dy=mouse.y-this.y;let distance=Math.sqrt(dx*dx+dy*dy);let forceDirectionX=dx/distance;let forceDirectionY=dy/distance;let maxDistance=100;let force=(maxDistance-distance)/maxDistance;if(distance<100){this.x-=forceDirectionX*force*this.density;this.y-=forceDirectionY*force*this.density;}else{if(this.x!==this.baseX){this.x-=(this.x-this.baseX)/10;}if(this.y!==this.baseY){this.y-=(this.y-this.baseY)/10;}}}}
     function init(){particlesArray=[];for(let i=0;i<150;i++){particlesArray.push(new Particle());}}
-    function connectParticles(){for(let a=0;a<particlesArray.length;a++){for(let b=a;b<particlesArray.length;b++){let dx=particlesArray[a].x-particlesArray[b].x;let dy=particlesArray[a].y-particlesArray[b].y;let distance=Math.sqrt(dx*dx+dy*dy);if(distance<120){ctx.strokeStyle=particlesArray[a].color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(particlesArray[a].x,particlesArray[a].y);ctx.lineTo(particles[b].x,particlesArray[b].y);ctx.stroke();ctx.closePath();}}}}
+    function connectParticles(){for(let a=0;a<particlesArray.length;a++){for(let b=a;b<particlesArray.length;b++){let dx=particlesArray[a].x-particlesArray[b].x;let dy=particlesArray[a].y-particlesArray[b].y;let distance=Math.sqrt(dx*dx+dy*dy);if(distance<120){ctx.strokeStyle=particlesArray[a].color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(particlesArray[a].x,particlesArray[a].y);ctx.lineTo(particlesArray[b].x,particlesArray[b].y);ctx.stroke();ctx.closePath();}}}}
     function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<particlesArray.length;i++){particlesArray[i].update();particlesArray[i].draw();}connectParticles();requestAnimationFrame(animate);}
     init(); animate();
 
-    // Modal e termos
+    // Cookies
+    function setCookie(cname, cvalue, exdays){
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      let expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    function getCookie(cname){
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for(let i = 0; i < ca.length; i++){
+        let c = ca[i].trim();
+        if(c.indexOf(name) == 0) return c.substring(name.length,c.length);
+      }
+      return "";
+    }
+
     const termsModal = document.getElementById('termsModal');
-    const termsClose = document.getElementById('termsClose');
     const btnAceitar = document.getElementById('btnAceitar');
     const btnRecusar = document.getElementById('btnRecusar');
-    const banOverlay = document.getElementById('banOverlay');
+    const termsClose = document.getElementById('termsClose');
+    const banScreen = document.getElementById('banScreen');
 
     function openTerms(){termsModal.style.display='block';}
     function closeTerms(){termsModal.style.display='none';}
 
-    function showBan(){
-      banOverlay.style.display='flex';
-      document.body.innerHTML=''; // bloqueia todo conteúdo
-      document.body.appendChild(banOverlay);
-    }
+    function showBan(){termsModal.style.display='none';banScreen.style.display='flex';}
 
-    // Botões Aceitar / Recusar
     btnAceitar.onclick = function(){
-      localStorage.setItem('termosAceitos','true');
+      setCookie('termosAceitos','true',3650);
       closeTerms();
     }
+
     btnRecusar.onclick = function(){
-      localStorage.setItem('banido','true');
+      setCookie('banido','true',3650);
       showBan();
     }
 
-    // Inicialização
-    window.onload = function(){
-      if(localStorage.getItem('banido') === 'true'){
-        showBan();
-      } else if(localStorage.getItem('termosAceitos') === 'true'){
-        // usuário já aceitou, nada a fazer
-      } else {
-        openTerms();
-      }
-    }
-
-    // Scroll suave
-    document.getElementById('btnSobreNav').onclick = ()=>{document.getElementById('sobre').scrollIntoView({behavior:'smooth'});}
-
-    // Bloqueio de ações sem termos aceitos
-    function checkTerms(e){
-      if(localStorage.getItem('termosAceitos')!=='true'){
-        e.preventDefault();
-        alert('❌ Você não aceitou os termos!');
-      }
-    }
-    document.getElementById('btnPlanos').addEventListener('click',checkTerms);
-    document.getElementById('btnDiscord').addEventListener('click',checkTerms);
-
-    // Botão Termos nav
-    document.getElementById('btnTermosNav').onclick = openTerms;
     termsClose.onclick = closeTerms;
+
+    function checkTermos(){
+      if(getCookie('banido') === 'true'){showBan();}
+      else if(getCookie('termosAceitos') !== 'true'){openTerms();}
+    }
+
+    window.onload = checkTermos;
+
+    // Bloquear links se não aceitou
+    ['btnPlanos','btnDiscord'].forEach(id=>{
+      const el = document.getElementById(id);
+      el.addEventListener('click', e=>{
+        if(getCookie('termosAceitos') !== 'true'){
+          e.preventDefault();
+          alert('❌ Você não aceitou os termos!');
+          openTerms();
+        }
+      });
+    });
+
+    // Scroll suave para Sobre
+    function scrollToSobre(){document.getElementById('sobre').scrollIntoView({behavior:'smooth'});}
   </script>
 
 </body>
