@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BlueN Anti-Cheat</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/js/all.min.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     @keyframes fadeIn {0%{opacity:0;transform:translateY(5px);}100%{opacity:1;transform:translateY(0);}}
     .animate-fadeIn{animation:fadeIn 0.3s ease-out forwards;}
@@ -17,26 +17,11 @@
     #termsModalContent{max-width:800px;margin:5% auto;background:#111827;padding:2rem;border-radius:1rem;color:#e5e7eb;line-height:1.6;}
     #termsModalContent h2{color:#3b82f6;font-size:2rem;margin-bottom:1rem;}
     #termsModalContent h3{color:#fbbf24;font-size:1.2rem;margin-top:1rem;margin-bottom:0.5rem;}
-    #termsClose{position:absolute;top:1rem;right:1rem;font-size:2rem;color:#fff;cursor:pointer;}
-    #banOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.95);display:none;z-index:100;text-align:center;color:red;font-size:3rem;display:flex;justify-content:center;align-items:center;flex-direction:column;}
     #safeBox{position:fixed;bottom:1.5rem;left:1.5rem;z-index:50;background:#1f2937;color:#10b981;padding:1rem 1.5rem;border-radius:0.5rem;font-weight:bold;box-shadow:0 0 15px rgba(16,185,129,0.6);}
     nav.fixed.top-0{gap:4px;display:flex;justify-end;padding:1.5rem;width:100%;z-index:40;}
-    #tempUnbanBtn{position:fixed;top:10px;left:10px;z-index:1000;}
   </style>
 </head>
 <body class="bg-gray-900 text-white relative overflow-x-hidden">
-
-  <!-- BAN OVERLAY -->
-  <div id="banOverlay">
-    <div>🚫 Você está banido!</div>
-  </div>
-
-  <!-- BOTÃO DE DESBANIMENTO TEMPORÁRIO -->
-  <div id="tempUnbanBtn">
-    <button onclick="unbanTemporario()" style="padding:10px 20px;background:red;color:white;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">
-      DESBANIR TEMPORÁRIO
-    </button>
-  </div>
 
   <canvas id="particles"></canvas>
 
@@ -69,7 +54,9 @@
     <h2 class="text-3xl font-bold text-blue-400">Sobre o BlueN</h2>
     <p class="mt-4 max-w-3xl mx-auto text-gray-300">
       O <span class="text-blue-400 font-semibold">BlueN Anti-Cheat</span> foi criado para garantir
-      um ambiente justo no <strong>MTA:SA</strong>. Desenvolvido com tecnologia avançada, ele impede exploits, bloqueia scripts maliciosos e protege a integridade do servidor contra hackers.
+      um ambiente justo no <strong>MTA:SA</strong>.  
+      Desenvolvido com tecnologia avançada, ele impede exploits, bloqueia scripts maliciosos
+      e protege a integridade do servidor contra hackers.  
     </p>
   </section>
 
@@ -167,33 +154,10 @@
   <!-- TERMOS MODAL -->
   <div id="termsModal">
     <div id="termsModalContent">
-      <span id="termsClose" onclick="closeTerms()">&times;</span>
       <h2>Termos & Condições</h2>
 
-      <!-- Todos os termos completos -->
       <h3>1.1 Termos de Produtos</h3>
-      <p>Estes termos e condições regulam o uso de todos os produtos, serviços e conteúdos oferecidos pela BlueN, incluindo sistemas de tráfego, eventos, sites e softwares. Ao acessar ou utilizar nossos serviços, você concorda em cumprir estes termos.</p>
-
-      <h3>Revisão dos Termos</h3>
-      <p>Revisamos nossos termos regularmente. É sua responsabilidade verificar esta página periodicamente para quaisquer alterações.</p>
-
-      <h3>Direitos de Propriedade Intelectual</h3>
-      <p>Você não pode violar nossos direitos de propriedade intelectual ou os direitos de terceiros.</p>
-
-      <h3>Formação de Contrato</h3>
-      <p>Estes termos formam um contrato legalmente vinculativo entre você e a BlueN.</p>
-
-      <h3>Produtos e Serviços</h3>
-      <p>Estes termos se aplicam a todos os nossos produtos e serviços, incluindo itens gratuitos e pagos.</p>
-
-      <h3>Alterações nos Termos</h3>
-      <p>Podemos alterar estes termos a qualquer momento. Alterações substanciais serão notificadas.</p>
-
-      <h3>Rescisão</h3>
-      <p>Podemos rescindir estes termos a qualquer momento, com ou sem aviso prévio.</p>
-
-      <h3>1.2 Termos de Produtos</h3>
-      <p>Não comercializamos códigos ou arquivos de nossos bots ou produtos. Não oferecemos reembolso. Suporte via tickets. Pagamentos somente via nossos sistemas.</p>
+      <p>Estes termos e condições regulam o uso de todos os produtos, serviços e conteúdos oferecidos pela BlueN...</p>
 
       <!-- Botões de aceitar e recusar -->
       <div class="mt-4 flex gap-4 justify-center">
@@ -222,22 +186,10 @@
     let isBanned = localStorage.getItem('banned') === 'true';
     let acceptedTerms = localStorage.getItem('termsAccepted') === 'true';
 
-    // Função desban temporário
-    function unbanTemporario() {
-      localStorage.removeItem('banned');
-      localStorage.removeItem('termsAccepted');
-      document.getElementById('banOverlay').style.display = 'none';
-      alert('✅ Banimento removido temporariamente! Recarregue a página.');
-      document.getElementById('tempUnbanBtn').style.display = 'none';
-    }
-
     // Bloqueio de acesso se banido
-    function mostrarBanOverlay(){
-      if(isBanned){
-        document.getElementById('banOverlay').style.display = 'flex';
-      }
+    if (isBanned) {
+      document.body.innerHTML = '<h1 style="text-align:center;margin-top:20%;font-size:3rem;color:red;">🚫Você está banido!</h1>';
     }
-    mostrarBanOverlay();
 
     function openTerms(){document.getElementById('termsModal').style.display='block';}
     function closeTerms(){document.getElementById('termsModal').style.display='none';}
@@ -255,7 +207,7 @@
       localStorage.setItem('banned','true');
       isBanned = true;
       closeTerms();
-      mostrarBanOverlay();
+      document.body.innerHTML = '<h1 style="text-align:center;margin-top:20%;font-size:3rem;color:red;">🚫Você está banido!</h1>';
     }
 
     // Função para verificar acesso antes de comprar ou acessar Discord
